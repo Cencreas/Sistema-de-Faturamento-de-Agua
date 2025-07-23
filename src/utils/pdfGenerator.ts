@@ -56,7 +56,7 @@ export const generatePDF = (bill: WaterBill) => {
   // Data Limite e Leitor
   doc.text(`Data Limite de Pagamento: ${bill.dueDate}`, margin, y);
   y += 7;
-  doc.text(`Leitor: ${bill.reader}`, margin, y);
+  doc.text(`Funcionário: ${bill.reader}`, margin, y);
 
   // Rodapé
   y = doc.internal.pageSize.height - 20;

@@ -118,7 +118,7 @@ export function BillPreview({ bill, isDarkMode, onDownload }: BillPreviewProps) 
           </div>
           <div className="text-right">
             <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Leitor
+              Funcionário
             </p>
             <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               {bill.reader}
