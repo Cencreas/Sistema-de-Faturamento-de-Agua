@@ -63,30 +63,40 @@ export const generatePDF = (bill: WaterBill) => {
     'Total a pagar'
   ];
   
-  const colWidth = (pageWidth - 2 * margin) / 6;
+  const tableWidth = pageWidth - 2 * margin;
+  const colWidths = [
+    tableWidth * 0.18, // LEITURAS
+    tableWidth * 0.12, // Consumo
+    tableWidth * 0.15, // Custo por m³
+    tableWidth * 0.18, // Valor a pagar
+    tableWidth * 0.18, // Valor em Dívida
+    tableWidth * 0.19  // Total a pagar
+  ];
   
   // Cabeçalho da tabela
-  doc.setFontSize(10);
+  doc.setFontSize(9);
   doc.setFont('helvetica', 'bold');
   
+  let currentX = margin;
   for (let i = 0; i < tableHeaders.length; i++) {
-    const x = margin + i * colWidth;
-    doc.rect(x, y, colWidth, 10);
-    doc.text(tableHeaders[i], x + 2, y + 7);
+    doc.rect(currentX, y, colWidths[i], 12);
+    
+    // Centralizar texto na célula
+    const textWidth = doc.getTextWidth(tableHeaders[i]);
+    const textX = currentX + (colWidths[i] - textWidth) / 2;
+    doc.text(tableHeaders[i], textX, y + 8);
+    
+    currentX += colWidths[i];
   }
   
-  y += 10;
+  y += 12;
   
-  // Sub-cabeçalho para leituras
+  // Linha de dados
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
-  doc.rect(margin, y, colWidth, 8);
-  doc.text(`Atual: ${bill.currentReading}`, margin + 2, y + 5);
-  doc.text(`Anterior: ${bill.previousReading}`, margin + 2, y + 7);
   
-  // Dados da tabela
   const tableData = [
-    '',
+    `Atual: ${bill.currentReading}\nAnterior: ${bill.previousReading}`,
     bill.consumption.toString(),
     `${bill.ratePerCubicMeter} MT`,
     `${bill.amountDue.toFixed(2)} MT`,
@@ -94,36 +104,55 @@ export const generatePDF = (bill: WaterBill) => {
     `${bill.totalAmount.toFixed(2)} MT`
   ];
   
-  for (let i = 1; i < tableData.length; i++) {
-    const x = margin + i * colWidth;
-    doc.rect(x, y, colWidth, 8);
-    doc.text(tableData[i], x + 2, y + 6);
+  currentX = margin;
+  const rowHeight = 16;
+  
+  for (let i = 0; i < tableData.length; i++) {
+    doc.rect(currentX, y, colWidths[i], rowHeight);
+    
+    if (i === 0) {
+      // Coluna de leituras com duas linhas
+      doc.text(`Atual: ${bill.currentReading}`, currentX + 2, y + 6);
+      doc.text(`Anterior: ${bill.previousReading}`, currentX + 2, y + 12);
+    } else {
+      // Outras colunas centralizadas
+      const textWidth = doc.getTextWidth(tableData[i]);
+      const textX = currentX + (colWidths[i] - textWidth) / 2;
+      doc.text(tableData[i], textX, y + 10);
+    }
+    
+    currentX += colWidths[i];
   }
   
-  y += 20;
+  y += rowHeight + 15;
 
   // Último dia de pagamento
   doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
   doc.text(`Último dia do pagamento: ${bill.dueDate}`, margin, y);
   y += 15;
 
-
   // Valor por Extenso
+  doc.setFont('helvetica', 'bold');
   doc.text('Valor por Extenso:', margin, y);
   y += 7;
+  doc.setFont('helvetica', 'normal');
   doc.text(bill.numberToWords(bill.totalAmount), margin, y);
-  y += 15;
+  y += 20;
 
-  // Assinatura do leitor
-  doc.text('Assinatura do leitor:', pageWidth - margin - 60, y);
+  // Assinatura do funcionário
+  doc.setFont('helvetica', 'bold');
+  doc.text('Assinatura do funcionário:', pageWidth - margin - 70, y);
   y += 7;
+  doc.setFont('helvetica', 'normal');
   doc.text(bill.reader, pageWidth - margin - 60, y);
   y += 5;
-  doc.line(pageWidth - margin - 60, y, pageWidth - margin, y);
+  doc.line(pageWidth - margin - 70, y, pageWidth - margin - 10, y);
 
   // Rodapé
   const footerY = doc.internal.pageSize.height - 20;
   doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
   doc.text('PRESADA E SERVIÇOS - Sistema de Faturação de Água', pageWidth / 2, footerY, { align: 'center' });
 
   doc.save(`fatura-agua-${bill.invoiceNumber}.pdf`);

@@ -57,85 +57,86 @@ export function BillPreview({ bill, isDarkMode, onDownload }: BillPreviewProps) 
         <div className={`border rounded-lg overflow-hidden ${
           isDarkMode ? 'bg-gray-800' : 'bg-gray-50'
         }`}>
-          <table className="w-full">
+          <table className="w-full table-fixed">
             <thead>
               <tr className={`${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
-                <th className={`p-3 text-left text-sm font-medium border-r ${isDarkMode ? 'text-gray-300 border-gray-600' : 'text-gray-700 border-gray-300'}`}>
+                <th className={`w-1/6 p-2 text-center text-xs font-medium border-r ${isDarkMode ? 'text-gray-300 border-gray-600' : 'text-gray-700 border-gray-300'}`}>
                   LEITURAS (m³)
                 </th>
-                <th className={`p-3 text-center text-sm font-medium border-r ${isDarkMode ? 'text-gray-300 border-gray-600' : 'text-gray-700 border-gray-300'}`}>
+                <th className={`w-1/6 p-2 text-center text-xs font-medium border-r ${isDarkMode ? 'text-gray-300 border-gray-600' : 'text-gray-700 border-gray-300'}`}>
                   Consumo (m³)
                 </th>
-                <th className={`p-3 text-center text-sm font-medium border-r ${isDarkMode ? 'text-gray-300 border-gray-600' : 'text-gray-700 border-gray-300'}`}>
+                <th className={`w-1/6 p-2 text-center text-xs font-medium border-r ${isDarkMode ? 'text-gray-300 border-gray-600' : 'text-gray-700 border-gray-300'}`}>
                   Custo por (m³)
                 </th>
-                <th className={`p-3 text-center text-sm font-medium border-r ${isDarkMode ? 'text-gray-300 border-gray-600' : 'text-gray-700 border-gray-300'}`}>
+                <th className={`w-1/6 p-2 text-center text-xs font-medium border-r ${isDarkMode ? 'text-gray-300 border-gray-600' : 'text-gray-700 border-gray-300'}`}>
                   Valor a pagar
                 </th>
-                <th className={`p-3 text-center text-sm font-medium border-r ${isDarkMode ? 'text-gray-300 border-gray-600' : 'text-gray-700 border-gray-300'}`}>
+                <th className={`w-1/6 p-2 text-center text-xs font-medium border-r ${isDarkMode ? 'text-gray-300 border-gray-600' : 'text-gray-700 border-gray-300'}`}>
                   Valor em Dívida
                 </th>
-                <th className={`p-3 text-center text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <th className={`w-1/6 p-2 text-center text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Total a pagar
                 </th>
               </tr>
-              <tr className={`${isDarkMode ? 'bg-gray-750' : 'bg-gray-100'}`}>
-                <td className={`p-2 border-r ${isDarkMode ? 'border-gray-600' : 'border-gray-300'}`}>
-                  <div className="flex justify-between text-xs">
-                    <span>Atual: {bill.currentReading}</span>
-                    <span>Anterior: {bill.previousReading}</span>
+            </thead>
+            <tbody>
+              <tr className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+                <td className={`p-2 border-r text-center ${isDarkMode ? 'border-gray-600 text-gray-300' : 'border-gray-300 text-gray-700'}`}>
+                  <div className="text-xs space-y-1">
+                    <div>Atual: {bill.currentReading}</div>
+                    <div>Anterior: {bill.previousReading}</div>
                   </div>
                 </td>
-                <td className={`p-2 text-center border-r ${isDarkMode ? 'border-gray-600' : 'border-gray-300'}`}>
+                <td className={`p-2 text-center text-sm border-r ${isDarkMode ? 'border-gray-600 text-gray-300' : 'border-gray-300 text-gray-700'}`}>
                   {bill.consumption}
                 </td>
-                <td className={`p-2 text-center border-r ${isDarkMode ? 'border-gray-600' : 'border-gray-300'}`}>
+                <td className={`p-2 text-center text-sm border-r ${isDarkMode ? 'border-gray-600 text-gray-300' : 'border-gray-300 text-gray-700'}`}>
                   {bill.ratePerCubicMeter} MT
                 </td>
-                <td className={`p-2 text-center border-r ${isDarkMode ? 'border-gray-600' : 'border-gray-300'}`}>
+                <td className={`p-2 text-center text-sm border-r ${isDarkMode ? 'border-gray-600 text-gray-300' : 'border-gray-300 text-gray-700'}`}>
                   {bill.amountDue.toFixed(2)} MT
                 </td>
-                <td className={`p-2 text-center border-r ${isDarkMode ? 'border-gray-600' : 'border-gray-300'}`}>
+                <td className={`p-2 text-center text-sm border-r ${isDarkMode ? 'border-gray-600 text-gray-300' : 'border-gray-300 text-gray-700'}`}>
                   {bill.previousDebt.toFixed(2)} MT
                 </td>
-                <td className={`p-2 text-center font-bold ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
+                <td className={`p-2 text-center text-sm font-bold ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
                   {bill.totalAmount.toFixed(2)} MT
                 </td>
               </tr>
-            </thead>
+            </tbody>
           </table>
         </div>
 
         <div className="space-y-4">
           <div>
-            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            <p className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               Último dia do pagamento: 
-              <span className={`ml-2 font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <span className={`ml-2 font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {bill.dueDate}
               </span>
             </p>
           </div>
           
           <div>
-            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            <p className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               Valor por extenso:
             </p>
-            <p className={`mt-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+            <p className={`mt-2 text-base font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               {bill.numberToWords(bill.totalAmount)}
             </p>
           </div>
         </div>
 
-
-        <div className="flex justify-end pt-4 border-t">
+        <div className={`flex justify-end pt-6 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
           <div className="text-right">
-            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Assinatura do leitor
+            <p className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Assinatura do funcionário
             </p>
-            <p className={`mt-2 font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <p className={`mt-3 text-base font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               {bill.reader}
             </p>
-            <div className={`mt-2 w-32 border-b ${isDarkMode ? 'border-gray-600' : 'border-gray-400'}`}></div>
+            <div className={`mt-3 w-40 border-b-2 ${isDarkMode ? 'border-gray-500' : 'border-gray-600'}`}></div>
           </div>
         </div>
 
