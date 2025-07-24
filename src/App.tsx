@@ -13,6 +13,7 @@ function App() {
   const [formData, setFormData] = useState({
     meterNumber: '',
     customerName: '',
+    contactNumber: '',
     currentReading: '',
     previousReading: '',
     ratePerCubicMeter: '',
@@ -50,6 +51,7 @@ function App() {
       issueDate: new Date().toLocaleDateString('pt-BR'),
       meterNumber: formData.meterNumber,
       customerName: formData.customerName,
+      contactNumber: formData.contactNumber || '',
       currentReading,
       previousReading,
       consumption,
@@ -69,6 +71,7 @@ function App() {
     setFormData({
       meterNumber: '',
       customerName: '',
+      contactNumber: '',
       currentReading: '',
       previousReading: '',
       ratePerCubicMeter: '',

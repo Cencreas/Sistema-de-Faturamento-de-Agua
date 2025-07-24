@@ -90,7 +90,7 @@ export function BillForm({ formData, isDarkMode, onFormChange }: BillFormProps) 
         <label className={labelClass}>
           <div className="flex items-center gap-2">
             <User className="w-4 h-4" />
-            Nome do Cliente
+            Exmo(a) Sr.(a)
             <Tooltip 
               isDarkMode={isDarkMode} 
               content="Digite o nome completo do cliente responsável pela conta de água."
@@ -103,6 +103,26 @@ export function BillForm({ formData, isDarkMode, onFormChange }: BillFormProps) 
           onChange={(e) => onFormChange({...formData, customerName: e.target.value})}
           className={inputClass}
           placeholder="Nome completo"
+        />
+      </div>
+
+      <div>
+        <label className={labelClass}>
+          <div className="flex items-center gap-2">
+            <Hash className="w-4 h-4" />
+            Contato N°
+            <Tooltip 
+              isDarkMode={isDarkMode} 
+              content="Digite o número de contato do cliente (telefone ou celular)."
+            />
+          </div>
+        </label>
+        <input
+          type="text"
+          value={formData.contactNumber || ''}
+          onChange={(e) => onFormChange({...formData, contactNumber: e.target.value})}
+          className={inputClass}
+          placeholder="Ex: +258 84 123 4567"
         />
       </div>
 

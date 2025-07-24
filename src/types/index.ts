@@ -4,6 +4,7 @@ export interface WaterBill {
   issueDate: string;
   meterNumber: string;
   customerName: string;
+  contactNumber: string;
   currentReading: number;
   previousReading: number;
   consumption: number;
