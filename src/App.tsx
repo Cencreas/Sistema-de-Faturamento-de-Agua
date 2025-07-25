@@ -38,7 +38,12 @@ function App() {
     previousReading: '',
     ratePerCubicMeter: '',
     previousDebt: '0',
-    reader: ''
+    reader: '',
+    dueDate: (() => {
+      const date = new Date();
+      date.setDate(date.getDate() + 10);
+      return date.toISOString().split('T')[0];
+    })()
   });
   const [error, setError] = useState<string>('');
 
@@ -47,7 +52,7 @@ function App() {
 
     if (!formData.meterNumber || !formData.customerName || !formData.issueDate || 
         !formData.consumptionMonth || !formData.currentReading || !formData.previousReading || 
-        !formData.ratePerCubicMeter || !formData.reader) {
+        !formData.ratePerCubicMeter || !formData.reader || !formData.dueDate) {
       setError('Por favor, preencha todos os campos obrigatórios');
       return;
     }
@@ -80,7 +85,7 @@ function App() {
       amountDue,
       previousDebt,
       totalAmount,
-      dueDate: getDueDate(),
+      dueDate: formatDate(formData.dueDate),
       reader: formData.reader,
       numberToWords
     };
@@ -99,7 +104,12 @@ function App() {
       previousReading: '',
       ratePerCubicMeter: '',
       previousDebt: '0',
-      reader: ''
+      reader: '',
+      dueDate: (() => {
+        const date = new Date();
+        date.setDate(date.getDate() + 10);
+        return date.toISOString().split('T')[0];
+      })()
     });
     setBill(null);
     setError('');

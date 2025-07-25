@@ -269,6 +269,25 @@ export function BillForm({ formData, isDarkMode, onFormChange }: BillFormProps) 
           placeholder="Nome do responsável"
         />
       </div>
+
+      <div>
+        <label className={labelClass}>
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4" />
+            Último dia do pagamento
+            <Tooltip 
+              isDarkMode={isDarkMode} 
+              content="Selecione a data limite para o pagamento desta fatura. Normalmente é definida entre 10 a 30 dias após a data de emissão."
+            />
+          </div>
+        </label>
+        <input
+          type="date"
+          value={formData.dueDate}
+          onChange={(e) => onFormChange({...formData, dueDate: e.target.value})}
+          className={inputClass}
+        />
+      </div>
     </div>
   );
 }
