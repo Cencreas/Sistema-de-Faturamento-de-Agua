@@ -146,9 +146,9 @@ export const generatePDF = (bill: WaterBill) => {
   doc.text(bill.numberToWords(bill.totalAmount), margin, y);
   y += 20;
 
-  // Assinatura do funcionário
+  // Assinatura do leitor
   doc.setFont('helvetica', 'bold');
-  doc.text('Assinatura do funcionário:', pageWidth - margin - 70, y);
+  doc.text('Assinatura do leitor:', pageWidth - margin - 70, y);
   y += 7;
   doc.setFont('helvetica', 'normal');
   doc.text(bill.reader, pageWidth - margin - 60, y);

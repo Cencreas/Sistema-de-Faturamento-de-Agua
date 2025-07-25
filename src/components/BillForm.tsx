@@ -254,7 +254,7 @@ export function BillForm({ formData, isDarkMode, onFormChange }: BillFormProps) 
         <label className={labelClass}>
           <div className="flex items-center gap-2">
             <User className="w-4 h-4" />
-            Nome do Funcionário
+            Nome do Leitor
             <Tooltip 
               isDarkMode={isDarkMode} 
               content="Digite o nome do funcionário responsável pela leitura do contador e emissão desta fatura."

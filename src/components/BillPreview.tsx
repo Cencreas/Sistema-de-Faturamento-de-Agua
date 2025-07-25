@@ -137,7 +137,7 @@ export function BillPreview({ bill, isDarkMode, onDownload }: BillPreviewProps) 
         <div className={`flex justify-end pt-6 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
           <div className="text-right">
             <p className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Assinatura do funcionário
+              Assinatura do leitor
             </p>
             <p className={`mt-3 text-base font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               {bill.reader}
