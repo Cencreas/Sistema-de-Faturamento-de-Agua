@@ -5,6 +5,21 @@ import { BillForm } from './components/BillForm';
 import { BillPreview } from './components/BillPreview';
 import { WaterBill } from './types';
 import { generateInvoiceNumber, getCurrentMonth, getDueDate, numberToWords } from './utils/billUtils';
+
+const formatMonth = (monthString: string) => {
+  const [year, month] = monthString.split('-');
+  const months = [
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+  ];
+  return `${months[parseInt(month) - 1]} ${year}`;
+};
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString + 'T00:00:00');
+  return date.toLocaleDateString('pt-BR');
+};
+
 import { generatePDF } from './utils/pdfGenerator';
 
 function App() {
@@ -13,6 +28,8 @@ function App() {
   const [formData, setFormData] = useState({
     meterNumber: '',
     customerName: '',
+    issueDate: new Date().toISOString().split('T')[0],
+    consumptionMonth: new Date().toISOString().slice(0, 7),
     contactNumber: '',
     currentReading: '',
     previousReading: '',
@@ -25,8 +42,9 @@ function App() {
   const calculateBill = () => {
     setError('');
 
-    if (!formData.meterNumber || !formData.customerName || !formData.currentReading || 
-        !formData.previousReading || !formData.ratePerCubicMeter || !formData.reader) {
+    if (!formData.meterNumber || !formData.customerName || !formData.issueDate || 
+        !formData.consumptionMonth || !formData.currentReading || !formData.previousReading || 
+        !formData.ratePerCubicMeter || !formData.reader) {
       setError('Por favor, preencha todos os campos obrigatórios');
       return;
     }
@@ -47,8 +65,8 @@ function App() {
 
     const newBill: WaterBill = {
       invoiceNumber: generateInvoiceNumber(),
-      month: getCurrentMonth(),
-      issueDate: new Date().toLocaleDateString('pt-BR'),
+      month: formatMonth(formData.consumptionMonth),
+      issueDate: formatDate(formData.issueDate),
       meterNumber: formData.meterNumber,
       customerName: formData.customerName,
       contactNumber: formData.contactNumber || '',
@@ -71,6 +89,8 @@ function App() {
     setFormData({
       meterNumber: '',
       customerName: '',
+      issueDate: new Date().toISOString().split('T')[0],
+      consumptionMonth: new Date().toISOString().slice(0, 7),
       contactNumber: '',
       currentReading: '',
       previousReading: '',

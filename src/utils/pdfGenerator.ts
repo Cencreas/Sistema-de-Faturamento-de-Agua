@@ -28,9 +28,15 @@ export const generatePDF = (bill: WaterBill) => {
   doc.setFont('helvetica', 'bold');
   doc.text('FATURA', pageWidth - margin - 30, y + 5);
   
+  // Mês de consumo e Data
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Mês de consumo: ${bill.month}`, pageWidth - margin - 60, y + 12);
+  doc.text(`Data: ${bill.issueDate}`, pageWidth - margin - 60, y + 18);
+  
   // Número da fatura em vermelho
   doc.setTextColor(255, 0, 0);
-  doc.text(bill.invoiceNumber, pageWidth - margin - 30, y + 15);
+  doc.text(bill.invoiceNumber, pageWidth - margin - 30, y + 25);
   doc.setTextColor(0, 0, 0);
   
   y += 35;

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Droplets, Calculator, User, Hash, Clock, AlertCircle, HelpCircle } from 'lucide-react';
+import { Droplets, Calculator, User, Hash, Clock, AlertCircle, HelpCircle, Calendar } from 'lucide-react';
 
 interface FormData {
   meterNumber: string;
   customerName: string;
+  issueDate: string;
+  consumptionMonth: string;
   currentReading: string;
   previousReading: string;
   ratePerCubicMeter: string;
@@ -129,8 +131,50 @@ export function BillForm({ formData, isDarkMode, onFormChange }: BillFormProps) 
       <div>
         <label className={labelClass}>
           <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4" />
+            Data
+            <Tooltip 
+              isDarkMode={isDarkMode} 
+              content="Selecione a data de emissão da fatura. Por padrão, será preenchida com a data atual."
+            />
+          </div>
+        </label>
+        <input
+          type="date"
+          value={formData.issueDate}
+          onChange={(e) => onFormChange({...formData, issueDate: e.target.value})}
+          className={inputClass}
+        />
+      </div>
+
+      <div>
+        <label className={labelClass}>
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4" />
+            Mês de Consumo
+            <Tooltip 
+              isDarkMode={isDarkMode} 
+              content="Selecione o mês de referência para o consumo de água que está sendo faturado."
+            />
+          </div>
+        </label>
+        <input
+          type="month"
+          value={formData.consumptionMonth}
+          onChange={(e) => onFormChange({...formData, consumptionMonth: e.target.value})}
+          className={inputClass}
+        />
+      </div>
+
+      <div>
+        <label className={labelClass}>
+          <div className="flex items-center gap-2">
             <Droplets className="w-4 h-4" />
             Leitura Atual (m³)
+            <Tooltip 
+              isDarkMode={isDarkMode} 
+              content="Registre a leitura atual do contador em metros cúbicos (m³). Este valor deve ser maior que a leitura anterior."
+            />
             <Tooltip 
               isDarkMode={isDarkMode} 
               content="Registre a leitura atual do contador em metros cúbicos (m³). Este valor deve ser maior que a leitura anterior."

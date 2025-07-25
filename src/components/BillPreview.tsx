@@ -32,6 +32,12 @@ export function BillPreview({ bill, isDarkMode, onDownload }: BillPreviewProps) 
             <p className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               FATURA
             </p>
+            <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              Mês de consumo: {bill.month}
+            </p>
+            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              Data: {bill.issueDate}
+            </p>
           </div>
           <div className="text-right">
             <p className="text-red-600 font-bold text-lg">
