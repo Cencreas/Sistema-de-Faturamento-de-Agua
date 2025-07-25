@@ -17,7 +17,10 @@ const formatMonth = (monthString: string) => {
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString + 'T00:00:00');
-  return date.toLocaleDateString('pt-BR');
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
 };
 
 import { generatePDF } from './utils/pdfGenerator';
