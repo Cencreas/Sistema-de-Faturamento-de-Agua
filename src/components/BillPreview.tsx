@@ -22,7 +22,7 @@ export function BillPreview({ bill, isDarkMode, onDownload }: BillPreviewProps) 
             PRESADA E SERVIÇOS
           </h1>
           <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            <p>Bairro de Ndiavel - Maputo</p>
+            <p>Bairro de Ndlavel - Maputo</p>
             <p>Q 14 Casa N° 286</p>
           </div>
         </div>
