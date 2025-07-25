@@ -30,7 +30,7 @@ export function BillPreview({ bill, isDarkMode, onDownload }: BillPreviewProps) 
         <div className="flex justify-between items-center">
           <div>
             <p className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              FATURA
+              FACTURA
             </p>
             <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               Mês de consumo: {bill.month}
