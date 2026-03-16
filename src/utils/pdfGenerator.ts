@@ -1,6 +1,13 @@
 import { jsPDF } from 'jspdf';
 import { WaterBill } from '../types';
 
+const formatCurrency = (value: number): string => {
+  return value.toLocaleString('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).replace(/\./g, '.').replace(/,/g, ',') + ' MT';
+};
+
 export const generatePDF = (bill: WaterBill) => {
   const doc = new jsPDF();
   const margin = 20;
@@ -23,140 +30,198 @@ export const generatePDF = (bill: WaterBill) => {
   doc.text('Bairro de Ndiavel - Maputo', margin + 25, y + 12);
   doc.text('Q 14 Casa N° 286', margin + 25, y + 18);
   
-  // FATURA no canto direito
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.text('FATURA', pageWidth - margin - 30, y + 5);
-  
-  // Mês de consumo e Data
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`Mês de consumo: ${bill.month}`, pageWidth - margin - 60, y + 12);
-  doc.text(`Data: ${bill.issueDate}`, pageWidth - margin - 60, y + 18);
-  
-  // Número da fatura em vermelho
-  doc.setTextColor(255, 0, 0);
-  doc.text(bill.invoiceNumber, pageWidth - margin - 30, y + 25);
-  doc.setTextColor(0, 0, 0);
-  
   y += 35;
+
+  // Título da fatura centralizado
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.text('FATURA DE ÁGUA', pageWidth / 2, y, { align: 'center' });
+  y += 20;
 
   // Linha separadora
   doc.line(margin, y, pageWidth - margin, y);
   y += 15;
 
-
   // Dados do Cliente
   doc.setFontSize(12);
-  doc.text(`Exmo(a) Sr.(a): ${bill.customerName}`, margin, y);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Cliente: ${bill.customerName}`, margin, y);
   y += 7;
   
   if (bill.contactNumber) {
-    doc.text(`Contato N°: ${bill.contactNumber}`, margin, y);
+    doc.text(`Contato: ${bill.contactNumber}`, margin, y);
     y += 7;
   }
   
   doc.text(`Contador: ${bill.meterNumber}`, margin, y);
+  y += 7;
+  
+  doc.text(`Mês: ${bill.month}`, margin, y);
+  y += 7;
+  
+  doc.text(`Data: ${bill.issueDate}`, margin, y);
+  y += 7;
+
+  // Número da fatura no canto direito
+  doc.setTextColor(255, 0, 0);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`N° ${bill.invoiceNumber}`, pageWidth - margin - 40, y - 28);
+  doc.setTextColor(0, 0, 0);
+  
   y += 15;
 
-  // Tabela principal
-  const tableHeaders = [
-    'LEITURAS (m³)',
-    'Consumo (m³)',
-    'Custo por (m³)',
-    'Valor a pagar',
-    'Valor em Dívida',
-    'Total a pagar'
+  // TABELA DE CONSUMO
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('CONSUMO', margin, y);
+  y += 10;
+
+  // Configuração da tabela de consumo
+  const consumoTableWidth = pageWidth - 2 * margin;
+  const consumoColWidths = [
+    consumoTableWidth * 0.33, // Leitura Atual
+    consumoTableWidth * 0.33, // Leitura Anterior
+    consumoTableWidth * 0.34  // Consumo
   ];
-  
-  const tableWidth = pageWidth - 2 * margin;
-  const colWidths = [
-    tableWidth * 0.18, // LEITURAS
-    tableWidth * 0.12, // Consumo
-    tableWidth * 0.15, // Custo por m³
-    tableWidth * 0.18, // Valor a pagar
-    tableWidth * 0.18, // Valor em Dívida
-    tableWidth * 0.19  // Total a pagar
+
+  const consumoHeaders = ['Leitura Atual', 'Leitura Anterior', 'Consumo'];
+  const consumoData = [
+    bill.currentReading.toString(),
+    bill.previousReading.toString(),
+    `${bill.consumption} m³`
   ];
-  
-  // Cabeçalho da tabela
-  doc.setFontSize(9);
+
+  // Cabeçalho da tabela de consumo
+  doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
   
   let currentX = margin;
-  for (let i = 0; i < tableHeaders.length; i++) {
-    doc.rect(currentX, y, colWidths[i], 12);
+  const headerHeight = 10;
+  
+  for (let i = 0; i < consumoHeaders.length; i++) {
+    doc.rect(currentX, y, consumoColWidths[i], headerHeight);
     
-    // Centralizar texto na célula
-    const textWidth = doc.getTextWidth(tableHeaders[i]);
-    const textX = currentX + (colWidths[i] - textWidth) / 2;
-    doc.text(tableHeaders[i], textX, y + 8);
+    const textWidth = doc.getTextWidth(consumoHeaders[i]);
+    const textX = currentX + (consumoColWidths[i] - textWidth) / 2;
+    doc.text(consumoHeaders[i], textX, y + 7);
     
-    currentX += colWidths[i];
+    currentX += consumoColWidths[i];
   }
   
-  y += 12;
+  y += headerHeight;
   
-  // Linha de dados
-  doc.setFontSize(8);
+  // Dados da tabela de consumo
   doc.setFont('helvetica', 'normal');
+  currentX = margin;
+  const dataHeight = 10;
   
-  const tableData = [
-    `Atual: ${bill.currentReading}\nAnterior: ${bill.previousReading}`,
-    bill.consumption.toString(),
-    `${bill.ratePerCubicMeter} MT`,
-    `${bill.amountDue.toFixed(2)} MT`,
-    `${bill.previousDebt.toFixed(2)} MT`,
-    `${bill.totalAmount.toFixed(2)} MT`
+  for (let i = 0; i < consumoData.length; i++) {
+    doc.rect(currentX, y, consumoColWidths[i], dataHeight);
+    
+    const textWidth = doc.getTextWidth(consumoData[i]);
+    const textX = currentX + (consumoColWidths[i] - textWidth) / 2;
+    doc.text(consumoData[i], textX, y + 7);
+    
+    currentX += consumoColWidths[i];
+  }
+  
+  y += dataHeight + 20;
+
+  // TABELA DE PAGAMENTO
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('PAGAMENTO', margin, y);
+  y += 10;
+
+  // Configuração da tabela de pagamento
+  const pagamentoTableWidth = pageWidth - 2 * margin;
+  const pagamentoColWidths = [
+    pagamentoTableWidth * 0.25, // Custo m³
+    pagamentoTableWidth * 0.25, // Valor Consumo
+    pagamentoTableWidth * 0.25, // Dívida
+    pagamentoTableWidth * 0.25  // Total
   ];
+
+  const pagamentoHeaders = ['Custo m³', 'Valor Consumo', 'Dívida', 'Total'];
+  const pagamentoData = [
+    formatCurrency(bill.ratePerCubicMeter),
+    formatCurrency(bill.amountDue),
+    formatCurrency(bill.previousDebt),
+    formatCurrency(bill.totalAmount)
+  ];
+
+  // Cabeçalho da tabela de pagamento
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
   
   currentX = margin;
-  const rowHeight = 16;
   
-  for (let i = 0; i < tableData.length; i++) {
-    doc.rect(currentX, y, colWidths[i], rowHeight);
+  for (let i = 0; i < pagamentoHeaders.length; i++) {
+    doc.rect(currentX, y, pagamentoColWidths[i], headerHeight);
     
-    if (i === 0) {
-      // Coluna de leituras com duas linhas
-      doc.text(`Atual: ${bill.currentReading}`, currentX + 2, y + 6);
-      doc.text(`Anterior: ${bill.previousReading}`, currentX + 2, y + 12);
-    } else {
-      // Outras colunas centralizadas
-      const textWidth = doc.getTextWidth(tableData[i]);
-      const textX = currentX + (colWidths[i] - textWidth) / 2;
-      doc.text(tableData[i], textX, y + 10);
-    }
+    const textWidth = doc.getTextWidth(pagamentoHeaders[i]);
+    const textX = currentX + (pagamentoColWidths[i] - textWidth) / 2;
+    doc.text(pagamentoHeaders[i], textX, y + 7);
     
-    currentX += colWidths[i];
+    currentX += pagamentoColWidths[i];
   }
   
-  y += rowHeight + 15;
-
-  // Último dia de pagamento
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.text(`Último dia do pagamento: ${bill.dueDate}`, margin, y);
-  y += 15;
+  y += headerHeight;
+  
+  // Dados da tabela de pagamento
+  currentX = margin;
+  
+  for (let i = 0; i < pagamentoData.length; i++) {
+    doc.rect(currentX, y, pagamentoColWidths[i], dataHeight);
+    
+    // Total em negrito
+    if (i === 3) {
+      doc.setFont('helvetica', 'bold');
+    } else {
+      doc.setFont('helvetica', 'normal');
+    }
+    
+    const textWidth = doc.getTextWidth(pagamentoData[i]);
+    const textX = currentX + (pagamentoColWidths[i] - textWidth) / 2;
+    doc.text(pagamentoData[i], textX, y + 7);
+    
+    currentX += pagamentoColWidths[i];
+  }
+  
+  y += dataHeight + 20;
 
   // Valor por Extenso
   doc.setFont('helvetica', 'bold');
+  doc.setFontSize(12);
   doc.text('Valor por Extenso:', margin, y);
-  y += 7;
+  y += 8;
+  
   doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
   const valorPorExtenso = bill.numberToWords(bill.totalAmount);
   const linhasTexto = doc.splitTextToSize(valorPorExtenso, pageWidth - 2 * margin);
   doc.text(linhasTexto, margin, y);
-  y += linhasTexto.length * 5;
+  y += linhasTexto.length * 6 + 15;
+
+  // Último dia de pagamento
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(12);
+  doc.text(`Último dia de pagamento: ${bill.dueDate}`, margin, y);
   y += 20;
 
   // Assinatura do leitor
   doc.setFont('helvetica', 'bold');
-  doc.text('Assinatura do leitor:', pageWidth - margin - 70, y);
-  y += 7;
+  doc.setFontSize(12);
+  doc.text('Assinatura do leitor:', margin, y);
+  y += 8;
+  
   doc.setFont('helvetica', 'normal');
-  doc.text(bill.reader, pageWidth - margin - 60, y);
-  y += 5;
-  doc.line(pageWidth - margin - 70, y, pageWidth - margin - 10, y);
+  doc.setFontSize(11);
+  doc.text(bill.reader, margin, y);
+  y += 8;
+  
+  // Linha para assinatura
+  doc.line(margin, y, margin + 80, y);
 
   // Rodapé
   const footerY = doc.internal.pageSize.height - 20;
