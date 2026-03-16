@@ -129,7 +129,7 @@ export function BillPreview({ bill, isDarkMode, onDownload }: BillPreviewProps) 
               Valor por extenso:
             </p>
             <p className={`mt-2 text-base font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              {bill.numberToWords(bill.totalAmount)}
+             {bill.numberToWords(bill.totalAmount)}
             </p>
           </div>
         </div>

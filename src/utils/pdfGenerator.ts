@@ -143,7 +143,10 @@ export const generatePDF = (bill: WaterBill) => {
   doc.text('Valor por Extenso:', margin, y);
   y += 7;
   doc.setFont('helvetica', 'normal');
-  doc.text(bill.numberToWords(bill.totalAmount), margin, y);
+  const valorPorExtenso = bill.numberToWords(bill.totalAmount);
+  const linhasTexto = doc.splitTextToSize(valorPorExtenso, pageWidth - 2 * margin);
+  doc.text(linhasTexto, margin, y);
+  y += linhasTexto.length * 5;
   y += 20;
 
   // Assinatura do leitor
