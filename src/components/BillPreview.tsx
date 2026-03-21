@@ -9,10 +9,10 @@ interface BillPreviewProps {
 }
 
 const formatCurrency = (value: number): string => {
-  return value.toLocaleString('pt-BR', {
+  return value.toLocaleString('pt-PT', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
-  }).replace(/\./g, '.').replace(/,/g, ',') + ' MT';
+  }).replace(/\s/g, '.').replace(/,/g, ',') + ' MT';
 };
 export function BillPreview({ bill, isDarkMode, onDownload }: BillPreviewProps) {
   return (
@@ -66,63 +66,9 @@ export function BillPreview({ bill, isDarkMode, onDownload }: BillPreviewProps) 
           </p>
         </div>
 
-        {/* Desktop Table - Hidden on mobile */}
-        <div className={`hidden md:block border rounded-lg overflow-hidden ${
-          isDarkMode ? 'bg-gray-800' : 'bg-gray-50'
-        }`}>
-          <table className="w-full table-fixed">
-            <thead>
-              <tr className={`${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
-                <th className={`w-1/6 p-2 text-center text-xs font-medium border-r ${isDarkMode ? 'text-gray-300 border-gray-600' : 'text-gray-700 border-gray-300'}`}>
-                  LEITURAS (m³)
-                </th>
-                <th className={`w-1/6 p-2 text-center text-xs font-medium border-r ${isDarkMode ? 'text-gray-300 border-gray-600' : 'text-gray-700 border-gray-300'}`}>
-                  Consumo (m³)
-                </th>
-                <th className={`w-1/6 p-2 text-center text-xs font-medium border-r ${isDarkMode ? 'text-gray-300 border-gray-600' : 'text-gray-700 border-gray-300'}`}>
-                  Custo por (m³)
-                </th>
-                <th className={`w-1/6 p-2 text-center text-xs font-medium border-r ${isDarkMode ? 'text-gray-300 border-gray-600' : 'text-gray-700 border-gray-300'}`}>
-                  Valor a pagar
-                </th>
-                <th className={`w-1/6 p-2 text-center text-xs font-medium border-r ${isDarkMode ? 'text-gray-300 border-gray-600' : 'text-gray-700 border-gray-300'}`}>
-                  Valor em Dívida
-                </th>
-                <th className={`w-1/6 p-2 text-center text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Total a pagar
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                <td className={`p-2 border-r text-center ${isDarkMode ? 'border-gray-600 text-gray-300' : 'border-gray-300 text-gray-700'}`}>
-                  <div className="text-xs space-y-1">
-                    <div>Atual: {bill.currentReading}</div>
-                    <div>Anterior: {bill.previousReading}</div>
-                  </div>
-                </td>
-                <td className={`p-2 text-center text-sm border-r ${isDarkMode ? 'border-gray-600 text-gray-300' : 'border-gray-300 text-gray-700'}`}>
-                  {bill.consumption}
-                </td>
-                <td className={`p-2 text-center text-sm border-r ${isDarkMode ? 'border-gray-600 text-gray-300' : 'border-gray-300 text-gray-700'}`}>
-                  {formatCurrency(bill.ratePerCubicMeter)}
-                </td>
-                <td className={`p-2 text-center text-sm border-r ${isDarkMode ? 'border-gray-600 text-gray-300' : 'border-gray-300 text-gray-700'}`}>
-                  {formatCurrency(bill.amountDue)}
-                </td>
-                <td className={`p-2 text-center text-sm border-r ${isDarkMode ? 'border-gray-600 text-gray-300' : 'border-gray-300 text-gray-700'}`}>
-                  {formatCurrency(bill.previousDebt)}
-                </td>
-                <td className={`p-2 text-center text-sm font-bold ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
-                  {formatCurrency(bill.totalAmount)}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
 
-        {/* Mobile Layout - Visible only on mobile */}
-        <div className={`md:hidden space-y-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+        {/* Layout em Blocos - Sempre visível */}
+        <div className={`space-y-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
           {/* Consumo de Água */}
           <div className={`border rounded-lg p-4 ${isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50'}`}>
             <h3 className={`font-bold text-lg mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
